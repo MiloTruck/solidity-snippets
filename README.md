@@ -11,7 +11,7 @@ interfaces
 └─ IERC20 — "Interface of the ERC-20 standard"
 
 snippets
-└─ ConstantSumPair — "A minimal x + y = k AMM"
+└─ ConstantSumPair — "Minimal x + y = k AMM"
 
 tokens
 └─ ERC20 — "Minimal ERC20 implementation"
