@@ -21,7 +21,7 @@ library SafeTransferLib {
     /**
      * @dev Send `amount` of ETH and revert if the transfer failed.
      */
-    function transferETH(address to, uint256 amount) internal {
+    function safeTransferETH(address to, uint256 amount) internal {
         bool success = tryTransferETH(to, amount);
         if (!success) {
             revert ETHTransferFailed();
@@ -29,19 +29,21 @@ library SafeTransferLib {
     }
 
     /**
-     * @dev Forcefully send `amount` of ETH to the recipient.
+     * @dev Forcefully send `amount` of ETH to the recipient with SELFDESTRUCT.
+            This will not trigger the recipient's receive or fallback function.
      */
     function forceTransferETH(address to, uint256 amount) internal {
-        bool success = tryTransferETH(to, amount);
+        bool success;
+        assembly {
+            mstore(0x00, to) // Store the address in scratch space
+            mstore8(0x0b, 0x73) // Opcode `PUSH20`
+            mstore8(0x20, 0xff) // Opcode `SELFDESTRUCT`
+            success := create(amount, 0x0b, 0x16)
+        }
 
-        // If the transfer with CALL fails, use SELFDESTRUCT to forcefully transfer ETH.
+        // CREATE only fails if this contract has insufficient ETH to send
         if (!success) {
-            assembly {
-                mstore(0x00, to) // Store the address in scratch space.
-                mstore8(0x0b, 0x73) // Opcode `PUSH20`.
-                mstore8(0x20, 0xff) // Opcode `SELFDESTRUCT`.
-                pop(create(amount, 0x0b, 0x16)) // Return value is not checked as CREATE should never revert.
-            }
+            revert ETHTransferFailed();
         }
     }
 
@@ -67,8 +69,8 @@ library SafeTransferLib {
         bytes memory approveData = abi.encodeCall(token.approve, (to, amount));
         bool success = _callOptionalReturn(token, approveData);
 
-        // If the original approval fails, call approve(to, 0) before re-trying.
-        // For tokens that revert on non-zero to non-zero approval (eg. USDT).
+        // If the original approval fails, call approve(to, 0) before retrying
+        // For tokens that revert on non-zero to non-zero approval (eg. USDT)
         if (!success) {
             _callOptionalReturnWithRevert(token, abi.encodeCall(token.approve, (to, 0)));
             _callOptionalReturnWithRevert(token, approveData);
@@ -87,8 +89,8 @@ library SafeTransferLib {
         
         return success && (
             returndata.length == 0
-            ? address(token).code.length != 0  // if returndata is empty, token must have code
-            : abi.decode(returndata, (bool))   // if returndata is not empty, it must be true
+            ? address(token).code.length != 0  // If returndata is empty, token must have code
+            : abi.decode(returndata, (bool))   // If returndata is not empty, it must be true
         );
     }
 }
