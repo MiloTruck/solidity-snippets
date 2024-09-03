@@ -14,7 +14,7 @@ snippets
 └─ ConstantSumPair — "Minimal x + y = k AMM"
 
 tokens
-└─ ERC20 — "Minimal ERC20 implementation"
+└─ ERC20 — "Minimal ERC-20 implementation"
 
 utils
 ├─ FixedPointMathLib — "Library to manage fixed-point arithmetic"
