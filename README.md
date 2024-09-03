@@ -1,66 +1,43 @@
-## Foundry
+# Solidity Snippets
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+A collection of commonly seen contracts, re-written to prioritize simplicity and readability.
 
-Foundry consists of:
+## Contracts
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+All contracts are located in the `src` directory.
 
-## Documentation
+```ml
+interfaces
+├─ IERC20 — "Interface of the ERC-20 standard"
 
-https://book.getfoundry.sh/
+snippets
+├─ ConstantSumPair - "A minimal x + y = k AMM"
 
-## Usage
+tokens
+├─ ERC20 — "Minimal ERC20 implementation"
 
-### Build
-
-```shell
-$ forge build
+utils
+├─ FixedPointMathLib — "Library to manage fixed-point arithmetic"
+├─ SafeTransferLib — "Library for safe ETH and ERC20 transfers"
+├─ VoteHistoryLib — "Library to store and retrieve vote history based on block number"
 ```
 
-### Test
+## Installation
 
-```shell
-$ forge test
+To install with [**Foundry**](https://github.com/gakonst/foundry):
+
+```sh
+forge install MiloTruck/solidity-snippets
 ```
 
-### Format
+## Safety
 
-```shell
-$ forge fmt
-```
+This codebase was written for demonstration purposes. It has not been audited and should not be used in production.
 
-### Gas Snapshots
+## Acknowledgements
 
-```shell
-$ forge snapshot
-```
+This repository is inspired by or directly modified from many sources, primarily:
 
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+- [OpenZeppelin](https://github.com/OpenZeppelin/openzeppelin-contracts)
+- [Solmate](https://github.com/transmissions11/solmate)
+- [Solady](https://github.com/Vectorized/solady)
